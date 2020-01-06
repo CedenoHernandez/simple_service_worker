@@ -25,4 +25,17 @@ self.addEventListener('install', (e) => {
 // Call activate event
 self.addEventListener('activate', (e) => {
     console.log('Service Worker: Activated');
+    // Remove unwanted caches
+    e.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if(cache !== cacheName) {
+                        console.log('Service Worker: Clearing old cache');
+                        return caches.delete(cache);
+                    }
+                })
+            )
+        })
+    );
 });
